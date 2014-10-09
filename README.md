@@ -10,7 +10,7 @@ Install in virtualenv imio_genode a geonode-project by git clone and pip install
 2. git clone https://github.com/Geode/vagrant_imio_geonode
 3. vagrant up
 
-Note : createsuperuser --noinput is not complete, must create manually a superuser with password, to finis the install :
+Note : createsuperuser --noinput is not complete, has to be created manually with password to finish the installation :
 
 vagrant ssh (add ssh to the path if windows)
 sudo su
