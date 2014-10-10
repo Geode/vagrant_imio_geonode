@@ -26,7 +26,7 @@ sed -i 's/SITEURL = '\''http:\/\/localhost\/'\''/SITEURL = '\''http:\/\/localhos
 sed -i "$ a\ServerName localhost" /etc/apache2/apache2.conf
 sed -i 's/WSGIScriptAlias \/ \/var\/www\/geonode\/wsgi\/geonode.wsgi/WSGIScriptAlias \/ \/var\/www\/imio_geonode\/imio_geonode\/wsgi.py/g' /etc/apache2/sites-available/geonode.conf
 #sed -i 's/WSGIScriptAlias \/ \/var\/www\/imio_geonode\/imio_geonode\/wsgi.py/WSGIScriptAlias \/ \/var\/www\/geonode\/wsgi\/geonode.wsgi/g' /etc/apache2/sites-available/geonode.conf
-cp /setup/wsgi.py /var/www/imio_geonode/wsgi.py
+cp /setup/wsgi.py /var/www/imio_geonode/imio_geonode/wsgi.py
 service apache2 restart
 cd /var/www/imio_geonode/
 python manage.py collectstatic --noinput
