@@ -22,7 +22,7 @@ sed -i 's/SITEURL = '\''http:\/\/localhost\/'\''/SITEURL = '\''http:\/\/localhos
 
 #ln -s /etc/geonode/local_settings.py  /var/www/imio_geonode/imio_geonode/local_settings.py
 # edit the Apache conf to prevent the error:
-# Could not reliably determine the server’s fully qualified domain name, using 127.0.1.1 for ServerName"
+# Could not reliably determine the server s fully qualified domain name, using 127.0.1.1 for ServerName"
 sed -i "$ a\ServerName localhost" /etc/apache2/apache2.conf
 sed -i 's/WSGIScriptAlias \/ \/var\/www\/geonode\/wsgi\/geonode.wsgi/WSGIScriptAlias \/ \/var\/www\/imio_geonode\/imio_geonode\/wsgi.py/g' /etc/apache2/sites-available/geonode.conf
 #sed -i 's/WSGIScriptAlias \/ \/var\/www\/imio_geonode\/imio_geonode\/wsgi.py/WSGIScriptAlias \/ \/var\/www\/geonode\/wsgi\/geonode.wsgi/g' /etc/apache2/sites-available/geonode.conf
