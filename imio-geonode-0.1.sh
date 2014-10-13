@@ -31,3 +31,14 @@ service apache2 restart
 cd /var/www/imio_geonode/
 python manage.py collectstatic --noinput
 echo 'finished installing IMIO geonode, test http://localhost:2780/'
+echo 'dont forget to finish creating superuser, doing the following steps : '
+echo 'vagrant ssh'
+echo '#note for windows user: set PATH=%PATH%;c:\Program Files (x86)\Git\bin'
+echo 'sudo su'
+echo '#activate virtualenv imio_geonode, one way, with wrapper :'
+echo 'export VIRTUALENVWRAPPER_PYTHON=/usr/bin/python'
+echo 'export WORKON_HOME=/home/.venvs'
+echo 'source /usr/local/bin/virtualenvwrapper.sh'
+echo 'export PIP_DOWNLOAD_CACHE=$HOME/.pip-downloads'
+echo 'workon imio_geonode'
+echo 'geonode createsuperuser'
