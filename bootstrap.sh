@@ -63,15 +63,14 @@ echo ' > end step 1 of 3 < (nexts step will be done onto virtualenv geonode'
 
 echo ' Setting up virtualenv for geonode'
 export VIRTUALENVWRAPPER_PYTHON=/usr/bin/python
-export WORKON_HOME=~/.venvs
+export WORKON_HOME=/home/.venvs
 source /usr/local/bin/virtualenvwrapper.sh
 export PIP_DOWNLOAD_CACHE=$HOME/.pip-downloads
-mkvirtualenv geonode
+mkvirtualenv geonode --system-site-package
 workon geonode
 echo ' Debug : installing psycopg2 for python 2.7'
 pip install psycopg2
 cd /home/
-git clone https://github.com/GeoNode/geonode.git
 
 echo 'configuring postgresql users and passwords :'
 sudo -u postgres psql -U postgres -d postgres -c "alter user postgres with password 'password';"
@@ -107,17 +106,20 @@ cp /setup/local_settings.py geonode/local_settings.py
 echo 'installing databases'
 python manage.py syncdb --noinput
 geonode createsuperuser --username=geode --email=info@opengeode.be --noinput
-#geonode-updateip localhost:1780
+geonode-updateip localhost:1780
 python manage.py collectstatic
 mkdir -p /home/geonode/geonode/uploaded
 chown www-data -R /home/geonode/geonode/uploaded
 
 echo 'Configuring Apache'
+#sed -i "$ a\ServerName localhost" /etc/apache2/apache2.conf
+cp /setup/apache2.conf /etc/apache2/apache2.conf
 a2enmod wsgi
 a2enmod proxy_http
-
+cp /setup/wsgi.py /home/geonode/geonode/wsgi.py
 cp /setup/geonode.conf /etc/apache2/sites-available/geonode.conf
 a2ensite geonode
+a2dessite 000-default
 chown www-data:www-data /home/geonode/geonode/static/
 chown www-data:www-data /home/geonode/geonode/uploaded/
 mkdir /home/geonode/geonode/static_root/
@@ -138,4 +140,3 @@ npm install -y -g bower
 npm install -y -g grunt-cli
 
 echo 'installing custom geonode project'
-echo 'todo'
