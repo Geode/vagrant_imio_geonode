@@ -47,6 +47,8 @@ apt-get install -y ${packagelist[@]}
 apt-get build-dep -y python-lxml
 pip install virtualenvwrapper
 apt-get install -y --force-yes openjdk-6-jdk ant maven2 --no-install-recommends
+
+echo 'Statics devs tools'
 apt-get install -y git gettext
 add-apt-repository -y ppa:chris-lea/node.js
 apt-get update
@@ -101,7 +103,8 @@ git clone https://github.com/GeoNode/geonode.git
 cd geonode
 pip install -e .
 paver setup
-cp /setup/local_settings.py geonode/local_settings.py
+echo 'overriding local_setup'
+cp -f /setup/local_settings.py /home/geonode/geonode/local_settings.py
 
 echo 'installing databases'
 python manage.py syncdb --noinput
@@ -113,30 +116,25 @@ chown www-data -R /home/geonode/geonode/uploaded
 
 echo 'Configuring Apache'
 #sed -i "$ a\ServerName localhost" /etc/apache2/apache2.conf
-cp /setup/apache2.conf /etc/apache2/apache2.conf
+cp -f /setup/apache2.conf /etc/apache2/apache2.conf
 a2enmod wsgi
 a2enmod proxy_http
-cp /setup/wsgi.py /home/geonode/geonode/wsgi.py
-cp /setup/geonode.conf /etc/apache2/sites-available/geonode.conf
+cp -f /setup/wsgi.py /home/geonode/geonode/wsgi.py
+cp -f /setup/geonode.conf /etc/apache2/sites-available/geonode.conf
 a2ensite geonode
-a2dessite 000-default
+a2dissite 000-default
 chown www-data:www-data /home/geonode/geonode/static/
 chown www-data:www-data /home/geonode/geonode/uploaded/
 mkdir /home/geonode/geonode/static_root/
 chown www-data:www-data /home/geonode/geonode/static_root/
 service apache2 reload
 
+cd /home/geonode
+python manage.py collectstatic --noinput
+
 echo 'Moving to tomcat7'
 service tomcat7 stop
 cp downloaded/geoserver.war /var/lib/tomcat7/webapps/
 service tomcat7 start
 
-echo 'Statics devs tools'
-apt-get install -y git gettext
-add-apt-repository -y ppa:chris-lea/node.js
-apt-get update
-apt-get install -y nodejs
-npm install -y -g bower
-npm install -y -g grunt-cli
-
-echo 'installing custom geonode project'
+echo '@todo ? installing custom geonode project'
