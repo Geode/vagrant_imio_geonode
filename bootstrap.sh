@@ -138,4 +138,11 @@ service tomcat7 stop
 cp downloaded/geoserver.war /var/lib/tomcat7/webapps/
 service tomcat7 start
 
+echo 'Installation dev tools for translation'
+apt-get install -y python-sphinx
+apt-get install -y transifex-client
+pip install sphinx_rtd_theme
+cp /setup/.transifexrc /root/.transifexrc
+echo 'just update /root/.transifexrc with our credentials if you gonna manage translations.'
+
 echo '@todo ? installing custom geonode project'
