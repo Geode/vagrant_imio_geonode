@@ -6,6 +6,14 @@ Current version geonode 2.4alpha
 Will install .deb package from dev-repository
 And after install in virtualenv imio_genode a geonode-project by git clone and pip install
 
+Purpose
+=======
+
+Test in the last geonode release (dev alpha and later stable) the IMIO custom website.
+
+HowTo
+=====
+
 1. install last virtualbox and vagrant
 2. git clone https://github.com/Geode/vagrant_imio_geonode
 3. cd vagrant_imio_geonode
