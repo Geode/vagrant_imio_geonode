@@ -32,7 +32,7 @@ If needed create a superuser
 6. export PIP_DOWNLOAD_CACHE=$HOME/.pip-downloads
 7. workon geonode
 8. cd /home/geonode/
-8. python manage.py create superuser
+8. python manage.py createsuperuser
 
 This procedure is not finished yet, some bug fixing required!
 
