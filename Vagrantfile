@@ -18,6 +18,6 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     vb.customize ["modifyvm", :id, "--memory", "2048"]
   end
 
-  config.vm.provision :shell, :path => "geonode-2.4alpha.sh"
-  config.vm.provision :shell, :path => "imio-geonode-0.1.sh"
+  config.vm.provision :shell, :path => "geonode-geode.sh"
+  #config.vm.provision :shell, :path => "imio-geonode-0.1.sh"
 end
