@@ -1,7 +1,7 @@
 vagrant_imio_geonode
 ====================
 
-Current version geonode 2.4alpha
+Current version geonode 2.4 alpha
 
 Will install .deb package from dev-repository
 And after install in virtualenv imio_genode a geonode-project by git clone and pip install
@@ -15,9 +15,10 @@ HowTo
 =====
 
 1. install last virtualbox and vagrant
-2. git clone https://github.com/Geode/vagrant_imio_geonode
-3. cd vagrant_imio_geonode
-4. vagrant up
+2. vagrant box add imiobox /path/to/vm-imio/geoserver.box
+3. git clone https://github.com/Geode/vagrant_imio_geonode
+4. cd vagrant_imio_geonode
+5. vagrant up
 
 Note : createsuperuser --noinput is a temporary superuser, new one has to be created manually with password to finish the installation :
 
