@@ -1,9 +1,14 @@
 #!/usr/bin/env bash
 echo 'start installing geonode geode'
-
-add-apt-repository ppa:geonode/testing 
-
+rm -v /etc/apt/sources.list.d/puppetlabs*
 apt-get update
+apt-get install -y software-properties-common
+add-apt-repository ppa:geonode/testing 
+apt-get update
+
+# rm -rv /var/cache/apt
+# rm -rv /var/lib/apt/lists
+# sed -i 's/ftp.belnet.be\/ubuntu.com/archive.ubuntu.com\/ubuntu/g' /etc/apt/sources.list
 
 packagelist=(
     build-essential
@@ -62,6 +67,7 @@ packagelist=(
     zip
     zlib1g-dev
     gdebi-core
+    gdebi
 )
 
 apt-get install -y ${packagelist[@]}
@@ -70,7 +76,6 @@ pip install virtualenvwrapper
 apt-get install -y --force-yes openjdk-6-jdk ant maven2 --no-install-recommends
 
 gdebi -n /setup/geonode_2.4.0-Geode.deb
-
 
 geonode createsuperuser --username=geode --email=info@opengeode.be --noinput
 geonode-updateip localhost:2780
