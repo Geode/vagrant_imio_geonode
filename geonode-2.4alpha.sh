@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-echo 'start installing geonode version 2.4 alpha'
+echo 'start installing geonode version 2.4 beta'
 add-apt-repository ppa:geonode/testing 
 apt-get update 
 apt-get install -y geonode
