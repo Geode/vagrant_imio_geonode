@@ -75,7 +75,7 @@ apt-get build-dep -y python-lxml
 #pip install virtualenvwrapper ya déjà une install sur imiobox
 apt-get install -y --force-yes openjdk-6-jdk ant maven2 --no-install-recommends
 
-gdebi -n /setup/geonode_IMIO_2014_11_17.deb
+gdebi -n /setup/geonode_IMIO_2014_12_1.deb
 
 geonode createsuperuser --username=geode --email=info@opengeode.be --noinput
 geonode-updateip localhost:2780
