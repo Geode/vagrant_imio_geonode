@@ -96,15 +96,38 @@ cd geonode
 echo 'installing geonode'
 workon imio_geonode
 pip install psycopg2
-pip install -e geonode --use-mirrors --allow-external pyproj --allow-unverified pyproj
 
-geonode createsuperuser --username=geode --email=info@opengeode.be --noinput
-geonode-updateip localhost:2780
+echo 'configuring postgresql users and passwords :'
+sudo -u postgres psql -U postgres -d postgres -c "alter user postgres with password 'password';"
+sudo -u postgres psql -U postgres -d postgres -c "create user geonode with password 'geonode';"
+echo 'allowing remote access to db server and enable password auth for all :'
+cp /etc/postgresql/9.3/main/postgresql.conf /etc/postgresql/9.3/main/postgresql.conf.bck
+sed -i "s/#listen_addresses = 'localhost'/listen_addresses = '*'/g" /etc/postgresql/9.3/main/postgresql.conf
+cp /etc/postgresql/9.3/main/pg_hba.conf /etc/postgresql/9.3/main/pg_hba.conf.bck
+sed -i "s/local all all peer/local all all md5/g" /etc/postgresql/9.3/main/pg_hba.conf
+sed -i "s/host all all ::1\/128 md5/host all all ::1\/32 md5/g" /etc/postgresql/9.3/main/pg_hba.conf
+service postgresql restart
+echo 'setup geonode database, postgis extension'
+sudo -u postgres psql -U postgres -d postgres -c 'CREATE DATABASE geonode;'
+sudo -u postgres psql -U postgres -d postgres -c 'GRANT ALL PRIVILEGES ON DATABASE geonode TO geonode;'
+sudo -u postgres psql -U postgres -d postgres -c 'CREATE DATABASE "geonode-imports";'
+sudo -u postgres psql -U postgres -d postgres -c 'GRANT ALL PRIVILEGES ON DATABASE "geonode-imports" TO geonode;'
+sudo -u postgres psql -U postgres -d geonode-imports -f /usr/share/postgresql/9.3/contrib/postgis-2.1/postgis.sql
+sudo -u postgres psql -U postgres -d geonode-imports -f /usr/share/postgresql/9.3/contrib/postgis-2.1/spatial_ref_sys.sql
+sudo -u postgres psql -U postgres -d geonode-imports -c 'GRANT ALL ON geometry_columns TO PUBLIC;'
+sudo -u postgres psql -U postgres -d geonode-imports -c 'GRANT ALL ON spatial_ref_sys TO PUBLIC;'
+sudo -u postgres psql -U postgres -d geonode -c 'create extension postgis;'
+
+pip install -e geonode --use-mirrors --allow-external pyproj --allow-unverified pyproj
+paver setup
+cp -f /setup/local_settings.py  ~/geonode/local_settings.py
+
+python manage.py syncdb --noinput
+python manage.py createsuperuser --username=geode --email=info@opengeode.be --noinput
+python manage.py collectstatic --noinput
 
 echo 'start installing IMIO geonode version 0.1 alpha'
 
-workon imio_geonode
-pip install psycopg2
 cd /var/www/
 #django-admin startproject imio_geonode --template=https://github.com/Geode/imio_geonode/archive/master.zip -epy,rst
 git clone https://github.com/Geode/imio_geonode
