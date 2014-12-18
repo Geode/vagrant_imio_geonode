@@ -78,7 +78,9 @@ apt-get install -y git
 
 echo 'creating virtyualenv @todo : customize good IMIO python'
 pip install virtualenvwrapper
-export VIRTUALENVWRAPPER_PYTHON=/usr/bin/python
+
+#@todo specify python here / future add it to startup ~/.bashrc
+export VIRTUALENVWRAPPER_PYTHON=/opt/python2.7/python
 export WORKON_HOME=/home/.venvs
 source /usr/local/bin/virtualenvwrapper.sh
 export PIP_DOWNLOAD_CACHE=$HOME/.pip-downloads
@@ -93,7 +95,8 @@ cd geonode
 
 echo 'installing geonode'
 workon imio_geonode
-pip install -e geonode
+pip install psycopg2
+pip install -e geonode --use-mirrors --allow-external pyproj --allow-unverified pyproj
 
 geonode createsuperuser --username=geode --email=info@opengeode.be --noinput
 geonode-updateip localhost:2780
