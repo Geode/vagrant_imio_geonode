@@ -77,16 +77,17 @@ apt-get install -y --force-yes openjdk-6-jdk ant maven2 --no-install-recommends
 apt-get install -y git
 
 echo 'creating virtyualenv @todo : customize good IMIO python'
-pip install virtualenvwrapper
-
+#pip install virtualenvwrapper
 #@todo specify python here / future add it to startup ~/.bashrc
-export VIRTUALENVWRAPPER_PYTHON=/opt/python2.7/python
-export WORKON_HOME=/home/.venvs
-source /usr/local/bin/virtualenvwrapper.sh
-export PIP_DOWNLOAD_CACHE=$HOME/.pip-downloads
-mkvirtualenv imio_geonode --system-site-package
+#export VIRTUALENVWRAPPER_PYTHON=/opt/python2.7/python
+#export WORKON_HOME=/home/.venvs
+#source /usr/local/bin/virtualenvwrapper.sh
+#export PIP_DOWNLOAD_CACHE=$HOME/.pip-downloads
+
+virtualenv-2.7 imio_geonode --system-site-package
 
 echo 'downloading geonode zip'
+apt-get install -y curl
 curl -sS https://github.com/Geode/geonode/archive/IMIO.zip > geonode.zip
 unzip geonode.zip  
 rm geonode.zip
@@ -94,7 +95,6 @@ mv geonode-IMIO geonode
 cd geonode
 
 echo 'installing geonode'
-workon imio_geonode
 pip install psycopg2
 
 echo 'configuring postgresql users and passwords :'
