@@ -151,6 +151,8 @@ chown www-data:www-data /var/www/geonode/geonode/static/
 chown www-data:www-data /var/www/geonode/geonode/uploaded/
 mkdir /var/www/geonode/geonode/static_root/
 chown www-data:www-data /var/www/geonode/geonode/static_root/
+a2enmod wsgi
+a2enmod proxy_http
 
 service apache2 restart
 
