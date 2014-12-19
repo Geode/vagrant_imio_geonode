@@ -90,9 +90,8 @@ echo 'downloading geonode zip'
 apt-get install -y curl
 curl -LOk https://github.com/Geode/geonode/archive/IMIO.zip
 unzip geonode.zip  
-rm geonode.zip
+rm IMIO.zip
 mv geonode-IMIO geonode
-cd geonode
 
 echo 'installing geonode'
 pip install psycopg2
@@ -119,7 +118,10 @@ sudo -u postgres psql -U postgres -d geonode-imports -c 'GRANT ALL ON spatial_re
 sudo -u postgres psql -U postgres -d geonode -c 'create extension postgis;'
 
 pip install -e geonode --use-mirrors --allow-external pyproj --allow-unverified pyproj
+
+cd geonode
 paver setup
+
 cp -f /setup/local_settings.py  ~/geonode/local_settings.py
 
 python manage.py syncdb --noinput
