@@ -88,7 +88,7 @@ virtualenv-2.7 imio_geonode --system-site-package
 
 echo 'downloading geonode zip'
 apt-get install -y curl
-curl -sS https://github.com/Geode/geonode/archive/IMIO.zip > geonode.zip
+curl -LOk https://github.com/Geode/geonode/archive/IMIO.zip > geonode.zip
 unzip geonode.zip  
 rm geonode.zip
 mv geonode-IMIO geonode
