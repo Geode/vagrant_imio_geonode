@@ -123,10 +123,7 @@ cd geonode
 paver setup
 
 cp -f /setup/local_settings.py  ~/geonode/local_settings.py
-
 python manage.py syncdb --noinput
-python manage.py createsuperuser --username=geode --email=info@opengeode.be --noinput
-python manage.py collectstatic --noinput
 
 echo 'start installing IMIO geonode version 0.1 alpha'
 
@@ -146,8 +143,19 @@ sed -i "$ a\ServerName localhost" /etc/apache2/apache2.conf
 sed -i 's/WSGIScriptAlias \/ \/var\/www\/geonode\/wsgi\/geonode.wsgi/WSGIScriptAlias \/ \/var\/www\/imio_geonode\/imio_geonode\/wsgi.py/g' /etc/apache2/sites-available/geonode.conf
 #sed -i 's/WSGIScriptAlias \/ \/var\/www\/imio_geonode\/imio_geonode\/wsgi.py/WSGIScriptAlias \/ \/var\/www\/geonode\/wsgi\/geonode.wsgi/g' /etc/apache2/sites-available/geonode.conf
 cp /setup/wsgi.py /var/www/imio_geonode/imio_geonode/wsgi.py
+
+cp -f /setup/geonode.conf /etc/apache2/sites-available/geonode.conf
+a2ensite geonode
+a2dissite 000-default
+chown www-data:www-data /var/www/geonode/geonode/static/
+chown www-data:www-data /var/www/geonode/geonode/uploaded/
+mkdir /var/www/geonode/geonode/static_root/
+chown www-data:www-data /var/www/geonode/geonode/static_root/
+
 service apache2 restart
+
 cd /var/www/imio_geonode/
+python manage.py createsuperuser --username=geode --email=info@opengeode.be --noinput
 python manage.py collectstatic --noinput
 
 echo 'finished installing IMIO geonode, test http://localhost:2780/'
