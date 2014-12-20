@@ -90,8 +90,8 @@ source imio_geonode/bin/activate
 echo 'downloading geonode zip'
 apt-get install -y curl
 curl -LOk https://github.com/Geode/geonode/archive/IMIO.zip
-unzip geonode.zip  
-rm IMIO.zip
+unzip geonode-IMIO.zip  
+rm geonode-IMIO.zip
 mv geonode-IMIO geonode
 
 echo 'installing geonode'
