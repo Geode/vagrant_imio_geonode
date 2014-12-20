@@ -133,7 +133,10 @@ cd /var/www/
 git clone https://github.com/Geode/imio_geonode
 pip install -e imio_geonode
 cd /var/www/imio_geonode/
+
 cp imio_geonode/local_settings.py.sample imio_geonode/local_settings.py
+cp -f /setup/geonode.conf /etc/apache2/sites-available/geonode.conf
+
 sed -i 's/SITENAME = '\''GeoNode'\''/SITENAME = '\''Imio-GeoNode'\''/g' imio_geonode/local_settings.py
 sed -i 's/SITEURL = '\''http:\/\/localhost\/'\''/SITEURL = '\''http:\/\/localhost:2780\/'\''/g' imio_geonode/local_settings.py
 
@@ -145,13 +148,12 @@ sed -i 's/WSGIScriptAlias \/ \/var\/www\/geonode\/wsgi\/geonode.wsgi/WSGIScriptA
 #sed -i 's/WSGIScriptAlias \/ \/var\/www\/imio_geonode\/imio_geonode\/wsgi.py/WSGIScriptAlias \/ \/var\/www\/geonode\/wsgi\/geonode.wsgi/g' /etc/apache2/sites-available/geonode.conf
 cp /setup/wsgi.py /var/www/imio_geonode/imio_geonode/wsgi.py
 
-cp -f /setup/geonode.conf /etc/apache2/sites-available/geonode.conf
 a2ensite geonode
 a2dissite 000-default
-chown www-data:www-data /var/www/geonode/geonode/static/
-chown www-data:www-data /var/www/geonode/geonode/uploaded/
+chown www-data:www-data /var/www/imio_geonode/imio_geonode/static/
+chown www-data:www-data /var/www/imio_geonode/imio_geonode/uploaded/
 mkdir /var/www/geonode/geonode/static_root/
-chown www-data:www-data /var/www/geonode/geonode/static_root/
+chown www-data:www-data /var/www/imio_geonode/imio_geonode/static_root/
 a2enmod wsgi
 a2enmod proxy_http
 
