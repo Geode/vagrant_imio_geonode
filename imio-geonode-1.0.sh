@@ -8,7 +8,11 @@ apt-get install -y software-properties-common
 add-apt-repository ppa:geonode/testing 
 apt-get update
 
-echo 'apt installing geonode dependances'
+echo 'creating virtyualenv with IMIO 2.7 python'
+virtualenv-2.7 imio_geonode --system-site-package
+source imio_geonode/bin/activate
+
+echo 'apt installing geonode dependencies'
 
 packagelist=(
     build-essential
@@ -81,10 +85,6 @@ add-apt-repository ppa:ubuntugis/ubuntugis-unstable
 apt-get update
 apt-get -y install libgdal1h libgdal-dev python-gdal
 
-echo 'creating virtyualenv with IMIO 2.7 python'
-virtualenv-2.7 imio_geonode --system-site-package
-source imio_geonode/bin/activate
-
 echo 'downloading geonode zip'
 apt-get install -y curl
 curl -LOk https://github.com/Geode/geonode/archive/IMIO.zip
@@ -121,7 +121,7 @@ pip install -e geonode --use-mirrors --allow-external pyproj --allow-unverified 
 cd geonode
 paver setup
 
-cp -f /setup/local_settings.py  ~/geonode/local_settings.py
+cp -f /setup/local_settings.py  /home/vagrant/geonode/local_settings.py
 python manage.py syncdb --noinput
 
 echo 'start installing IMIO geonode version 0.1 alpha'
