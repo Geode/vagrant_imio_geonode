@@ -164,7 +164,7 @@ python manage.py collectstatic --noinput
 
 echo 'Moving to tomcat7'
 service tomcat7 stop
-cp downloaded/geoserver.war /var/lib/tomcat7/webapps/
+cp /home/vagrant/geonode/downloaded/geoserver.war /var/lib/tomcat7/webapps/
 service tomcat7 start
 
 echo 'finished installing IMIO geonode, test http://localhost:2780/'
