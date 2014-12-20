@@ -90,8 +90,8 @@ source imio_geonode/bin/activate
 echo 'downloading geonode zip'
 apt-get install -y curl
 curl -LOk https://github.com/Geode/geonode/archive/IMIO.zip
-unzip geonode-IMIO.zip  
-rm geonode-IMIO.zip
+unzip IMIO.zip  
+rm IMIO.zip
 mv geonode-IMIO geonode
 
 echo 'installing geonode'
@@ -132,10 +132,12 @@ cd /var/www/
 #django-admin startproject imio_geonode --template=https://github.com/Geode/imio_geonode/archive/master.zip -epy,rst
 git clone https://github.com/Geode/imio_geonode
 pip install -e imio_geonode
-cd /var/www/imio_geonode/
 
 cp imio_geonode/local_settings.py.sample imio_geonode/local_settings.py
+cp /setup/wsgi.py /var/www/imio_geonode/imio_geonode/wsgi.py
 cp -f /setup/geonode.conf /etc/apache2/sites-available/geonode.conf
+
+cd /var/www/imio_geonode/
 
 sed -i 's/SITENAME = '\''GeoNode'\''/SITENAME = '\''Imio-GeoNode'\''/g' imio_geonode/local_settings.py
 sed -i 's/SITEURL = '\''http:\/\/localhost\/'\''/SITEURL = '\''http:\/\/localhost:2780\/'\''/g' imio_geonode/local_settings.py
@@ -146,14 +148,13 @@ sed -i 's/SITEURL = '\''http:\/\/localhost\/'\''/SITEURL = '\''http:\/\/localhos
 sed -i "$ a\ServerName localhost" /etc/apache2/apache2.conf
 sed -i 's/WSGIScriptAlias \/ \/var\/www\/geonode\/wsgi\/geonode.wsgi/WSGIScriptAlias \/ \/var\/www\/imio_geonode\/imio_geonode\/wsgi.py/g' /etc/apache2/sites-available/geonode.conf
 #sed -i 's/WSGIScriptAlias \/ \/var\/www\/imio_geonode\/imio_geonode\/wsgi.py/WSGIScriptAlias \/ \/var\/www\/geonode\/wsgi\/geonode.wsgi/g' /etc/apache2/sites-available/geonode.conf
-cp /setup/wsgi.py /var/www/imio_geonode/imio_geonode/wsgi.py
 
 a2ensite geonode
 a2dissite 000-default
-chown www-data:www-data /var/www/imio_geonode/imio_geonode/static/
-chown www-data:www-data /var/www/imio_geonode/imio_geonode/uploaded/
+chown www-data:www-data /var/www/geonode/geonode/static/
+chown www-data:www-data /var/www/geonode/geonode/uploaded/
 mkdir /var/www/geonode/geonode/static_root/
-chown www-data:www-data /var/www/imio_geonode/imio_geonode/static_root/
+chown www-data:www-data /var/www/geonode/geonode/static_root/
 a2enmod wsgi
 a2enmod proxy_http
 
