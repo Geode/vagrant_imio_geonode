@@ -15,9 +15,9 @@ framework.
 """
 import os, sys, site
 sys.path.append('/var/www/imio_geonode/imio_geonode')
-site.addsitedir('/home/.venvs/imio_geonode/lib/python2.7/site-packages')
+site.addsitedir('/home/vagrant/imio_geonode/lib/python2.7/site-packages')
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "imio_geonode.settings")
-activate_this = os.path.expanduser("/home/.venvs/imio_geonode/bin/activate_this.py")
+activate_this = os.path.expanduser("/home/vagrant/imio_geonode/bin/activate_this.py")
 execfile(activate_this, dict(__file__=activate_this))
 
 # This application object is used by any WSGI server configured to use this
