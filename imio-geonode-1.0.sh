@@ -85,6 +85,7 @@ echo 'creating virtyualenv @todo : customize good IMIO python'
 #export PIP_DOWNLOAD_CACHE=$HOME/.pip-downloads
 
 virtualenv-2.7 imio_geonode --system-site-package
+source imio_geonode/bin/activate
 
 echo 'downloading geonode zip'
 apt-get install -y curl
