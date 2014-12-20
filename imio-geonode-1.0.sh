@@ -76,14 +76,12 @@ apt-get build-dep -y python-lxml
 apt-get install -y --force-yes openjdk-6-jdk ant maven2 --no-install-recommends
 apt-get install -y git
 
-echo 'creating virtyualenv @todo : customize good IMIO python'
-#pip install virtualenvwrapper
-#@todo specify python here / future add it to startup ~/.bashrc
-#export VIRTUALENVWRAPPER_PYTHON=/opt/python2.7/python
-#export WORKON_HOME=/home/.venvs
-#source /usr/local/bin/virtualenvwrapper.sh
-#export PIP_DOWNLOAD_CACHE=$HOME/.pip-downloads
+echo ' > Fix bug, install gdal for development'
+add-apt-repository ppa:ubuntugis/ubuntugis-unstable
+apt-get update
+apt-get -y install libgdal1h libgdal-dev python-gdal
 
+echo 'creating virtyualenv with IMIO 2.7 python'
 virtualenv-2.7 imio_geonode --system-site-package
 source imio_geonode/bin/activate
 
@@ -163,6 +161,11 @@ service apache2 restart
 cd /var/www/imio_geonode/
 python manage.py createsuperuser --username=geode --email=info@opengeode.be --noinput
 python manage.py collectstatic --noinput
+
+echo 'Moving to tomcat7'
+service tomcat7 stop
+cp downloaded/geoserver.war /var/lib/tomcat7/webapps/
+service tomcat7 start
 
 echo 'finished installing IMIO geonode, test http://localhost:2780/'
 echo 'dont forget to finish creating superuser, doing the following steps : '
