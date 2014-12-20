@@ -131,7 +131,7 @@ cd /var/www/
 git clone https://github.com/Geode/imio_geonode
 pip install -e imio_geonode
 
-cp imio_geonode/local_settings.py.sample imio_geonode/local_settings.py
+cp /var/www/imio_geonode/imio_geonode/local_settings.py.sample /var/www/imio_geonode/imio_geonode/local_settings.py
 cp /setup/wsgi.py /var/www/imio_geonode/imio_geonode/wsgi.py
 cp -f /setup/geonode.conf /etc/apache2/sites-available/geonode.conf
 
