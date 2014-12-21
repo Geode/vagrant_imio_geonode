@@ -8,10 +8,6 @@ apt-get install -y software-properties-common
 add-apt-repository ppa:geonode/testing 
 apt-get update
 
-echo 'creating virtyualenv with IMIO 2.7 python'
-virtualenv-2.7 imio_geonode --system-site-package
-source imio_geonode/bin/activate
-
 echo 'apt installing geonode dependencies'
 
 packagelist=(
@@ -84,6 +80,12 @@ echo ' > Fix bug, install gdal for development'
 add-apt-repository ppa:ubuntugis/ubuntugis-unstable
 apt-get update
 apt-get -y install libgdal1h libgdal-dev python-gdal
+
+echo 'creating virtyualenv with IMIO 2.7 python'
+#virtualenv-2.7 imio_geonode --system-site-package <-- les packages installés par apt le sont dans le python syst
+#@todo use 2.7 and import / reinstall system-site-packages from  system python
+virtualenv imio_geonode --system-site-package
+source imio_geonode/bin/activate
 
 echo 'downloading geonode zip'
 apt-get install -y curl
