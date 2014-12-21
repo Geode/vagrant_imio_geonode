@@ -105,6 +105,7 @@ cp /etc/postgresql/9.3/main/postgresql.conf /etc/postgresql/9.3/main/postgresql.
 sed -i "s/#listen_addresses = 'localhost'/listen_addresses = '*'/g" /etc/postgresql/9.3/main/postgresql.conf
 cp /etc/postgresql/9.3/main/pg_hba.conf /etc/postgresql/9.3/main/pg_hba.conf.bck
 sed -i "s/local all all peer/local all all md5/g" /etc/postgresql/9.3/main/pg_hba.conf
+sed -i "s/local   all             all                                     peer/local   all             all                                     md5/g" /etc/postgresql/9.3/main/pg_hba.conf
 sed -i "s/host all all ::1\/128 md5/host all all ::1\/32 md5/g" /etc/postgresql/9.3/main/pg_hba.conf
 service postgresql restart
 echo 'setup geonode database, postgis extension'
