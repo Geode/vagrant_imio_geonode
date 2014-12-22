@@ -13,41 +13,41 @@ echo 'apt installing geonode dependencies'
 packagelist=(
     build-essential
     apache2
-    gcc                    
-    gdal-bin               
-    gettext                
-    git-core               
-    libapache2-mod-wsgi    
-    libgeos-dev            
-    libjpeg-dev            
-    libpng-dev             
-    libpq-dev              
-    libproj-dev            
-    libxml2-dev            
-    libxslt1-dev            
-    openjdk-6-jre          
-    patch                  
-    postgresql-9.3         
-    postgresql-9.3-postgis-2.1 
-    postgresql-contrib     
+    gcc
+    gdal-bin
+    gettext
+    git-core
+    libapache2-mod-wsgi
+    libgeos-dev
+    libjpeg-dev
+    libpng-dev
+    libpq-dev
+    libproj-dev
+    libxml2-dev
+    libxslt1-dev
+    openjdk-6-jre
+    patch
+    postgresql-9.3
+    postgresql-9.3-postgis-2.1
+    postgresql-contrib
     postgresql-contrib-9.3
-    python                 
-    python-dev             
-    python-gdal            
-    python-imaging         
-    python-lxml            
-    python-pip             
-    python-pyproj          
-    python-pastescript     
-    python-software-properties 
-    python-shapely         
-    python-support         
-    python-httplib2        
-    python-urlgrabber      
-    python-virtualenv 
+    python
+    python-dev
+    python-gdal
+    python-imaging
+    python-lxml
+    python-pip
+    python-pyproj
+    python-pastescript
+    python-software-properties
+    python-shapely
+    python-support
+    python-httplib2
+    python-urlgrabber
+    python-virtualenv
     python-nose
     python-httplib2
-    python-psycopg2 
+    python-psycopg2
     python-django
     python-django-downloadview
     python-django-activity-stream
@@ -60,10 +60,10 @@ packagelist=(
     python-django-taggit
     python-django-taggit-templatetags
     python-dialogos
-    python-bs4    
-    tomcat7                
-    tmux                   
-    unzip                  
+    python-bs4
+    tomcat7
+    tmux
+    unzip
     zip
     zlib1g-dev
     gdebi-core
@@ -82,11 +82,39 @@ apt-get update
 apt-get -y install libgdal1h libgdal-dev python-gdal
 
 echo 'creating virtyualenv with IMIO 2.7 python'
-#virtualenv-2.7 imio_geonode --system-site-package <-- les packages installés par apt le sont dans le python syst
+virtualenv-2.7 imio_geonode --system-site-package 
 #@todo use 2.7 and import / reinstall system-site-packages from  system python
-virtualenv imio_geonode --system-site-package
+#virtualenv imio_geonode --system-site-package
 source imio_geonode/bin/activate
 
+echo 'installing python dependencies in virtualenv'
+pip install gdal
+pip install imaging
+pip install lxml
+pip install pyproj
+pip install pastescript
+pip install software-properties
+pip install shapely
+pip install support
+pip install httplib2
+pip install urlgrabber
+pip install nose
+pip install httplib2
+pip install psycopg2 
+pip install django
+pip install django-downloadview
+pip install django-activity-stream
+pip install django-extensions
+pip install django-forms-bootstrap
+pip install django-friendly-tag-loader
+pip install django-geoexplorer
+pip install django-jsonfield
+pip install django-pagination
+pip install django-taggit
+pip install django-taggit-templatetags
+pip install dialogos
+pip install bs4
+    
 echo 'downloading geonode zip'
 apt-get install -y curl
 curl -LOk https://github.com/Geode/geonode/archive/IMIO.zip
@@ -127,7 +155,7 @@ paver setup
 cp -f /setup/local_settings.py  /home/vagrant/geonode/local_settings.py
 python manage.py syncdb --noinput
 
-echo 'start installing IMIO geonode version 0.1 alpha'
+echo 'start installing IMIO geonode version alpha'
 
 cd /var/www/
 #django-admin startproject imio_geonode --template=https://github.com/Geode/imio_geonode/archive/master.zip -epy,rst
