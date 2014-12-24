@@ -88,6 +88,12 @@ virtualenv-2.7 imio_geonode --system-site-package
 source imio_geonode/bin/activate
 
 echo 'installing python dependencies in virtualenv'
+pip install --no-install GDAL
+cd /home/vagrant/imio_geonode/build/GDAL
+python setup.py build_ext --include-dirs=/usr/include/gdal/
+pip install --no-download GDAL
+cd /home/vagrant
+
 pip install gdal
 pip install imaging
 pip install lxml
@@ -114,7 +120,7 @@ pip install django-taggit
 pip install django-taggit-templatetags
 pip install dialogos
 pip install bs4
-    
+
 echo 'downloading geonode zip'
 apt-get install -y curl
 curl -LOk https://github.com/Geode/geonode/archive/IMIO.zip
