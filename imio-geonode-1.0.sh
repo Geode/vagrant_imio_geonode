@@ -94,7 +94,6 @@ python setup.py build_ext --include-dirs=/usr/include/gdal/
 pip install --no-download GDAL
 cd /home/vagrant
 
-pip install gdal
 pip install imaging
 pip install lxml
 pip install pyproj
