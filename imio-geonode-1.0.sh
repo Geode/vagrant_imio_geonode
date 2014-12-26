@@ -157,7 +157,7 @@ pip install -e geonode --use-mirrors --allow-external pyproj --allow-unverified 
 cd geonode
 paver setup
 
-cp -f /setup/local_settings.py  /home/vagrant/geonode/local_settings.py
+cp -f /setup/local_settings.py  /home/vagrant/geonode/geonode/local_settings.py
 python manage.py syncdb --noinput
 
 echo 'start installing IMIO geonode version alpha'
