@@ -186,6 +186,8 @@ sed -i 's/WSGIScriptAlias \/ \/var\/www\/geonode\/wsgi\/geonode.wsgi/WSGIScriptA
 a2ensite geonode
 a2dissite 000-default
 chown www-data:www-data /var/www/imio_geonode/imio_geonode/static/
+mkdir /var/www/imio_geonode/imio_geonode/static_root/
+chown www-data:www-data /var/www/imio_geonode/imio_geonode/static_root/
 chown www-data:www-data /var/www/imio_geonode/imio_geonode/uploaded/
 a2enmod wsgi
 a2enmod proxy_http
