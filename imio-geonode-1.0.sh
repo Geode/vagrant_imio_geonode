@@ -188,6 +188,8 @@ a2dissite 000-default
 chown www-data:www-data /var/www/imio_geonode/imio_geonode/static/
 mkdir /var/www/imio_geonode/imio_geonode/static_root/
 chown www-data:www-data /var/www/imio_geonode/imio_geonode/static_root/
+mkdir /home/vagrant/geonode/geonode/uploaded
+chown www-data:www-data /home/vagrant/geonode/geonode/uploaded/
 chown www-data:www-data /var/www/imio_geonode/imio_geonode/uploaded/
 a2enmod wsgi
 a2enmod proxy_http
@@ -203,6 +205,19 @@ service tomcat7 stop
 cp /home/vagrant/geonode/downloaded/geoserver.war /var/lib/tomcat7/webapps/
 service tomcat7 start
 
+echo 'Import des données Fléron et Dison de test en postgis'
+cp /setup/gis_dison.dump.gz /tmp/gis_dison.dump.gz
+cp /setup/gis_fleron.dump.gz /tmp/gis_fleron.dump.gz
+gunzip /tmp/gis_dison.dump.gz 
+gunzip /tmp/gis_fleron.dump.gz 
+echo "localhost:*:*:geonode:geonode" > $HOME/.pgpass
+echo "localhost:*:*:geonode-imports:geonode" > $HOME/.pgpass
+chmod 0600 $HOME/.pgpass
+psql -U geonode -d geonode-imports -f gis_dison.dump
+psql -U geonode -d geonode-imports -f gis_fleron.dump
+rm $HOME/.pgpass
+#geoserver manual
+python manage.py updatelayers
 echo 'finished installing IMIO geonode, test http://localhost:2780/'
 echo 'dont forget to finish creating superuser, doing the following steps : '
 echo 'vagrant ssh'
