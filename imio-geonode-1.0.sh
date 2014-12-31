@@ -187,8 +187,6 @@ a2ensite geonode
 a2dissite 000-default
 chown www-data:www-data /var/www/imio_geonode/imio_geonode/static/
 chown www-data:www-data /var/www/imio_geonode/imio_geonode/uploaded/
-mkdir /var/www/imio_geonode/imio_geonode/static_root/
-chown www-data:www-data /var/www/imio_geonode/imio_geonode/static_root/
 a2enmod wsgi
 a2enmod proxy_http
 
