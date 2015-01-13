@@ -31,43 +31,20 @@ packagelist=(
     postgresql-9.3-postgis-2.1
     postgresql-contrib
     postgresql-contrib-9.3
-    python
     python-dev
     python-gdal
     python-imaging
-    python-lxml
     python-pip
-    python-pyproj
-    python-pastescript
     python-software-properties
-    python-shapely
     python-support
-    python-httplib2
-    python-urlgrabber
     python-virtualenv
-    python-nose
-    python-httplib2
-    python-psycopg2
-    python-django
-    python-django-downloadview
-    python-django-activity-stream
-    python-django-extensions
-    python-django-forms-bootstrap
-    python-django-friendly-tag-loader
-    python-django-geoexplorer
-    python-django-jsonfield
-    python-django-pagination
-    python-django-taggit
-    python-django-taggit-templatetags
-    python-dialogos
     python-bs4
     tomcat7
     tmux
     unzip
     zip
     zlib1g-dev
-    gdebi-core
-    gdebi
+    curl
 )
 
 apt-get install -y ${packagelist[@]}
@@ -82,7 +59,7 @@ apt-get update
 apt-get -y install libgdal1h libgdal-dev python-gdal
 
 echo 'creating virtyualenv with IMIO 2.7 python'
-virtualenv-2.7 imio_geonode --system-site-package 
+virtualenv imio_geonode --system-site-package 
 #@todo use 2.7 and import / reinstall system-site-packages from  system python
 #virtualenv imio_geonode --system-site-package
 source imio_geonode/bin/activate
@@ -94,41 +71,13 @@ python setup.py build_ext --include-dirs=/usr/include/gdal/
 pip install --no-download GDAL
 cd /home/vagrant
 
-pip install imaging
-pip install lxml
-pip install pyproj
-pip install pastescript
-pip install software-properties
-pip install shapely
-pip install support
-pip install httplib2
-pip install urlgrabber
-pip install nose
-pip install httplib2
-pip install psycopg2 
-pip install django
-pip install django-downloadview
-pip install django-activity-stream
-pip install django-extensions
-pip install django-forms-bootstrap
-pip install django-friendly-tag-loader
-pip install django-geoexplorer
-pip install django-jsonfield
-pip install django-pagination
-pip install django-taggit
-pip install django-taggit-templatetags
-pip install dialogos
-pip install bs4
+pip install -r /setup/requirements.txt
 
 echo 'downloading geonode zip'
-apt-get install -y curl
 curl -LOk https://github.com/Geode/geonode/archive/IMIO.zip
 unzip IMIO.zip  
 rm IMIO.zip
 mv geonode-IMIO geonode
-
-echo 'installing geonode'
-pip install psycopg2
 
 echo 'configuring postgresql users and passwords :'
 sudo -u postgres psql -U postgres -d postgres -c "alter user postgres with password 'password';"
