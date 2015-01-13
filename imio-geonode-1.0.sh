@@ -38,7 +38,6 @@ packagelist=(
     python-software-properties
     python-support
     python-virtualenv
-    python-bs4
     tomcat7
     tmux
     unzip
