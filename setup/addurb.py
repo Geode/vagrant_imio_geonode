@@ -52,7 +52,7 @@ if __name__ == "__main__":
 	parser.add_option("-u", "--urbanUrl", action="store", type="string", dest="urbanUrl", default="", help="Urban URL [default: %default]")
 	parser.add_option("-r", "--ropw", action="store", type="string", dest="ropw", default="", help="Remote postGIS ro_user password [default: %default]")
 	parser.add_option("-d", "--database", action="store", type="string", dest="database", default="urb_xxx", help="remote urban database name [default: %default]")
-	parser.add_option("-p", "--alias", action="store", type="string", dest="alias", default="", help="prefix alias [default: %default]")
+	parser.add_option("-a", "--alias", action="store", type="string", dest="alias", default="", help="prefix alias [default: %default]")
 	(options, args) = parser.parse_args()
 	if options.gpw is None:
     		parser.error('Admin geoserver password not given')
