@@ -1,9 +1,6 @@
 #!/usr/bin/env python
 
 from optparse import OptionParser
-
-#Note : @todo parameter and all refactoring
-
 from geoserver.catalog import Catalog
 
 def main(options):
