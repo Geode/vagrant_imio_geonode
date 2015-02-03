@@ -3,6 +3,59 @@
 from optparse import OptionParser
 from geoserver.catalog import Catalog
 
+#from https://groups.google.com/forum/#!msg/geonode-users/R-u57r8aECw/A9zk-LXBgjUJ
+def publishTable(layerName, epsg, style=None):
+    
+    if not epsg.startswith('EPSG:'): epsg = 'EPSG:'+epsg
+    
+    gsUrl = settings.OGC_SERVER['default']['LOCATION'] + "rest"
+    gsUser = settings.OGC_SERVER['default']['USER']
+    gsPassword = settings.OGC_SERVER['default']['PASSWORD']
+    
+    cat = Catalog(gsUrl, gsUser, gsPassword)    
+    if cat is None: raise GeonodeManagementError('unable to instantiate geoserver catalog')
+
+    ws = cat.get_workspace(settings.DEFAULT_WORKSPACE)
+    if ws is None: raise GeonodeManagementError('workspace %s not found in geoserver'%settings.DEFAULT_WORKSPACE)
+    
+    storeName = settings.OGC_SERVER['default']['DATASTORE']
+    store = cat.get_store(storeName, ws)
+    if store is None: raise GeonodeManagementError('workspace %s not found in geoserver'%storeName)
+    
+    ft = cat.publish_featuretype(layerName, store, epsg, srs=epsg)
+    if ft is None: raise GeonodeManagementError('unable to publish layer %s'%layerName)
+    
+    cat.save(ft)
+    
+    if style is not None:
+        publishing = cat.get_layer(layerName)
+        if publishing is None: raise GeonodeManagementError('layer not found ($s)'%layerName)
+        publishing.default_style = cat.get_style(style)
+        cat.save(publishing)
+    
+    resource = cat.get_resource(layerName, store, ws)
+    if resource is None: raise GeonodeManagementError('resource not found ($s)'%layerName)
+    
+    layer, created = Layer.objects.get_or_create(name=layerName, defaults={
+                    "workspace": ws.name,
+                    "store": store.name,
+                    "storeType": store.resource_type,
+                    "typename": "%s:%s" % (ws.name.encode('utf-8'), resource.name.encode('utf-8')),
+                    "title": resource.title or 'No title provided',
+                    "abstract": resource.abstract or 'No abstract provided',
+                    #"owner": owner,
+                    "uuid": str(uuid.uuid4()),
+                    "bbox_x0": Decimal(resource.latlon_bbox[0]),
+                    "bbox_x1": Decimal(resource.latlon_bbox[1]),
+                    "bbox_y0": Decimal(resource.latlon_bbox[2]),
+                    "bbox_y1": Decimal(resource.latlon_bbox[3])
+                })
+    
+    set_attributes(layer, overwrite=True)
+    
+    if created: layer.set_default_permissions()
+
+
 def main(options):
   #connect to geoserver
   cat = Catalog("http://localhost:8080/geoserver/rest", "admin", options.gpw)
