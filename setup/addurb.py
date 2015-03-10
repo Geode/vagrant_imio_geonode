@@ -18,7 +18,7 @@ def main(options):
       port="5432",
       database=options.database,
       user="ro_user",
-      password=options.ropw,
+      passwd=options.ropw,
       dbtype="postgis")
   
   cat.save(ds)
