@@ -8,6 +8,7 @@ from geoserver.catalog import Catalog
 from uuid import uuid4
 from decimal import *
 from pprint import pprint
+from django.core.management import call_command
 
 from geonode.layers.models import Layer
 
@@ -56,71 +57,76 @@ def main(options):
   	"geli":"cadastre_ln_generales",
   	"inli":"cadastre_ln_informations",
   	"topt":"point",
-  	}   	
-  	
-  #connect to tables and create layers and correct urban styles
-  for table in urb:
-    print(' ')
-    print('--------------------------------------')
-    print('--------------------------------------')
-    lL = Layer.objects.all()
-    print(lL)
-    print(' ')
-    print('   !!! table : ')
-    print(table)
-    style = urb[table]
-    ft = cat.publish_featuretype(table, ds, 'EPSG:31370', srs='EPSG:31370')
-    ft.default_style = style
-    cat.save(ft)
-    res_name = ft.dirty['name']
-    res_title = options.alias+"_"+table
+  	}
+  print(len(urb))   	
 
-    print(' ')
-    print('   !!! ft :')
-    pprint (vars(ft))
+  try:
+    #connect to tables and create layers and correct urban styles
+    for table in urb:
+      print(' ')
+      print('--------------------------------------')
+      print('--------------------------------------')
+      lL = Layer.objects.all()
+      print(lL)
+      print(' ')
+      print('   !!! table : ')
+      print(table)
+      style = urb[table]
+      ft = cat.publish_featuretype(table, ds, 'EPSG:31370', srs='EPSG:31370')
+      ft.default_style = style
+      cat.save(ft)
+      res_name = ft.dirty['name']
+      res_title = options.alias+"_"+table
 
-    #resource = ft.resource
-    #resource.title = options.alias+"_"+table
-    #resource.save()
+      print(' ')
+      print('   !!! ft :')
+      pprint (vars(ft))
 
-    print(' ')
-    print('   !!! uuid :')
-    t_uuid = str(uuid4())
-    print(t_uuid)
+      #resource = ft.resource
+      #resource.title = options.alias+"_"+table
+      #resource.save()
+
+      print(' ')
+      print('   !!! uuid :')
+      t_uuid = str(uuid4())
+      print(t_uuid)
+      
+      #layer, created = Layer.objects.get_or_create(name=res_name, defaults={
+      #	            "workspace": ws.name,
+      #              "store": ds.name,
+      #              "storeType": ds.resource_type,
+      #              "typename": "%s:%s" % (ws.name.encode('utf-8'), res_name.encode('utf-8')),
+      #              "title": res_title or 'No title provided',
+      #              "abstract": 'No abstract provided',
+      #              #"owner": owner,
+      #              "uuid": t_uuid
+      #              #"bbox_x0": Decimal(ft.latLonBoundingBox.miny),
+      #              #"bbox_x1": Decimal(ft.latLonBoundingBox.maxy),
+      #              #"bbox_y0": Decimal(ft.latLonBoundingBox.minx),
+      #              #"bbox_y1": Decimal(ft.latLonBoundingBox.maxx)
+      # 	         })
     
-    layer, created = Layer.objects.get_or_create(name=res_name, defaults={
-      	            "workspace": ws.name,
-                    "store": ds.name,
-                    "storeType": ds.resource_type,
-                    "typename": "%s:%s" % (ws.name.encode('utf-8'), res_name.encode('utf-8')),
-                    "title": res_title or 'No title provided',
-                    "abstract": 'No abstract provided',
-                    #"owner": owner,
-                    "uuid": t_uuid
-                    #"bbox_x0": Decimal(ft.latLonBoundingBox.miny),
-                    #"bbox_x1": Decimal(ft.latLonBoundingBox.maxy),
-                    #"bbox_y0": Decimal(ft.latLonBoundingBox.minx),
-                    #"bbox_y1": Decimal(ft.latLonBoundingBox.maxx)
-      	         })
-    
-    if created:
-       print(' ')
-       print('   !!! layer cree :')
-       pprint (vars(layer))
-       layer.save()
-       #set_attributes(layer, overwrite=True)
-       if created:
-          print('   layer cree')
-          layer.set_default_permissions()
-          layer.save()
-       print('   layer_name :')
-       print(layer.title)
-    else:
-       print(' ')
-       print("   !!! le layer n'as pas ete cree ... Verifier si il etait deja cree avant ?")
-       print('   layer_name :')
-       print(layer.title)
+      #if created:
+      #  print(' ')
+      #  print('   !!! layer cree :')
+      #  pprint (vars(layer))
+      #  layer.save()
+      #  #set_attributes(layer, overwrite=True)
+      #  if created:
+      #    print('   layer cree')
+      #    layer.set_default_permissions()
+      #    layer.save()
+      #  print('   layer_name :')
+      #  print(layer.title)
+      #else:
+      #  print(' ')
+      #  print("   !!! le layer n'as pas ete cree ... Verifier si il etait deja cree avant ?")
+      #  print('   layer_name :')
+      #  print(layer.title)
+  except Exception as e:
+    print(str(e))
 
+  call_command('updatelayers') # est appeler mais n'uploade pas dans geonode... par contre via l'interface admin et la nouvelle option d'appele on a des layers dans geonode.
   
 if __name__ == "__main__":
 	parser = OptionParser()
