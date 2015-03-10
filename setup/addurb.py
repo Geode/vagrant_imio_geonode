@@ -1,23 +1,31 @@
 #!/usr/bin/env python
+import os
+import geonode
+os.environ['DJANGO_SETTINGS_MODULE'] = 'geonode.settings'
 
 from optparse import OptionParser
 from geoserver.catalog import Catalog
+from uuid import uuid4
+from decimal import *
+from pprint import pprint
+
+from geonode.layers.models import Layer
 
 #DOc: https://groups.google.com/forum/#!msg/geonode-users/R-u57r8aECw/A9zk-LXBgjUJ
 
 def main(options):
   #connect to geoserver
-  cat = Catalog("http://localhost:8080/geoserver/rest", "admin", options.gpw)
+  cat = Catalog("http://localhost:8080/geoserver/rest", "raphael", options.gpw)
   
   #create datrastore for URB schema
-  ws = cat.create_workspace(options.alias,'imio.be')
+  ws = cat.create_workspace(options.alias,options.uri)
   
   ds = cat.create_datastore(options.alias, ws)
   ds.connection_parameters.update(
       host=options.urbanUrl,
       port="5432",
       database=options.database,
-      user="ro_user",
+      user=options.postuser,
       passwd=options.ropw,
       dbtype="postgis")
   
@@ -40,30 +48,45 @@ def main(options):
   	
   #connect to tables and create layers and correct urban styles
   for table in urb:
+    print('   !!! table : ')
+    print(table)
     style = urb[table]
     ft = cat.publish_featuretype(table, ds, 'EPSG:31370', srs='EPSG:31370')
     ft.default_style = style
     cat.save(ft)
-    resource = ft.resource
-    resource.title = options.alias+"_"+table
-    resource.save()
+    res_name = ft.dirty['name']
+    res_title = options.alias+"_"+table
+
+    print('   !!! ft :')
+    pprint (vars(ft))
+
+    #resource = ft.resource
+    #resource.title = options.alias+"_"+table
+    #resource.save()
     
-    layer, created = Layer.objects.get_or_create(name=layerName, defaults={
+    layer, created = Layer.objects.get_or_create(name=res_name, defaults={
       	            "workspace": ws.name,
                     "store": ds.name,
                     "storeType": ds.resource_type,
-                    "typename": "%s:%s" % (ws.name.encode('utf-8'), resource.name.encode('utf-8')),
-                    "title": resource.title or 'No title provided',
-                    "abstract": resource.abstract or 'No abstract provided',
+                    "typename": "%s:%s" % (ws.name.encode('utf-8'), res_name.encode('utf-8')),
+                    "title": res_title or 'No title provided',
+                    "abstract": 'No abstract provided',
                     #"owner": owner,
-                    "uuid": str(uuid.uuid4()),
-                    "bbox_x0": Decimal(resource.latlon_bbox[0]),
-                    "bbox_x1": Decimal(resource.latlon_bbox[1]),
-                    "bbox_y0": Decimal(resource.latlon_bbox[2]),
-                    "bbox_y1": Decimal(resource.latlon_bbox[3])
+                    "uuid": str(uuid4())
+                    #"bbox_x0": Decimal(ft.latLonBoundingBox.miny),
+                    #"bbox_x1": Decimal(ft.latLonBoundingBox.maxy),
+                    #"bbox_y0": Decimal(ft.latLonBoundingBox.minx),
+                    #"bbox_y1": Decimal(ft.latLonBoundingBox.maxx)
       	         })
-    set_attributes(layer, overwrite=True)
-    if created: layer.set_default_permissions()
+    
+    if created:
+       print('   !!! layer :')
+       pprint (vars(layer))
+       layer.save()
+       #set_attributes(layer, overwrite=True)
+       if created: layer.set_default_permissions()
+    else:
+       print("   !!! Erreur de sauvegarde pour le layer")
 
   
 if __name__ == "__main__":
@@ -73,6 +96,8 @@ if __name__ == "__main__":
 	parser.add_option("-r", "--ropw", action="store", type="string", dest="ropw", default="", help="Remote postGIS ro_user password [default: %default]")
 	parser.add_option("-d", "--database", action="store", type="string", dest="database", default="urb_xxx", help="remote urban database name [default: %default]")
 	parser.add_option("-a", "--alias", action="store", type="string", dest="alias", default="", help="prefix alias [default: %default]")
+        parser.add_option("-z", "--uri", action="store", type="string", dest="uri", default="", help="uri= [default: %default]")
+        parser.add_option("-g", "--postuser", action="store", type="string", dest="postuser", default="", help="db_user= [default: %default]")
 	(options, args) = parser.parse_args()
 	if options.gpw is None:
     		parser.error('Admin geoserver password not given')
