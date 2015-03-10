@@ -31,6 +31,18 @@ def main(options):
   
   cat.save(ds)
   ds = cat.get_store(options.alias)
+
+  lL = Layer.objects.all()
+  print(lL)
+  c = lL.count()
+  print(c)
+  while c > 0:
+    c = c-1
+    l = lL[c]
+    if l.name=='bxl':
+      print('on le garde')
+    else:
+       l.delete()
   
   #config object
   urb = {
@@ -48,6 +60,12 @@ def main(options):
   	
   #connect to tables and create layers and correct urban styles
   for table in urb:
+    print(' ')
+    print('--------------------------------------')
+    print('--------------------------------------')
+    lL = Layer.objects.all()
+    print(lL)
+    print(' ')
     print('   !!! table : ')
     print(table)
     style = urb[table]
@@ -57,12 +75,18 @@ def main(options):
     res_name = ft.dirty['name']
     res_title = options.alias+"_"+table
 
+    print(' ')
     print('   !!! ft :')
     pprint (vars(ft))
 
     #resource = ft.resource
     #resource.title = options.alias+"_"+table
     #resource.save()
+
+    print(' ')
+    print('   !!! uuid :')
+    t_uuid = str(uuid4())
+    print(t_uuid)
     
     layer, created = Layer.objects.get_or_create(name=res_name, defaults={
       	            "workspace": ws.name,
@@ -72,7 +96,7 @@ def main(options):
                     "title": res_title or 'No title provided',
                     "abstract": 'No abstract provided',
                     #"owner": owner,
-                    "uuid": str(uuid4())
+                    "uuid": t_uuid
                     #"bbox_x0": Decimal(ft.latLonBoundingBox.miny),
                     #"bbox_x1": Decimal(ft.latLonBoundingBox.maxy),
                     #"bbox_y0": Decimal(ft.latLonBoundingBox.minx),
@@ -80,13 +104,22 @@ def main(options):
       	         })
     
     if created:
-       print('   !!! layer :')
+       print(' ')
+       print('   !!! layer cree :')
        pprint (vars(layer))
        layer.save()
        #set_attributes(layer, overwrite=True)
-       if created: layer.set_default_permissions()
+       if created:
+          print('   layer cree')
+          layer.set_default_permissions()
+          layer.save()
+       print('   layer_name :')
+       print(layer.title)
     else:
-       print("   !!! Erreur de sauvegarde pour le layer")
+       print(' ')
+       print("   !!! le layer n'as pas ete cree ... Verifier si il etait deja cree avant ?")
+       print('   layer_name :')
+       print(layer.title)
 
   
 if __name__ == "__main__":
